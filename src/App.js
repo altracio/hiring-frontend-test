@@ -36,7 +36,7 @@ function App() {
     (async () => {
       try {
         const date = moment(moment("2019-01-01"), DATE_FORMAT).add(data.duration, 'days').format(DATE_FORMAT);
-        const day = moment(date).format("MMMM Do");
+        const day = moment(date).format("MMM Do");
 
         let url = `${API_URL}/${DEVICE_ID}?date=${date}&tzOffset=${TZ_OFFSET}&elevation=${elevation}&latitude=${LATITUDE}&Kc=${coef}`;
 
@@ -84,33 +84,39 @@ function App() {
               title: {
                 text: 'Evapo Chart'
               },
-              xAxis: {
-                title: {
-                  text: 'Date'
+              xAxis: [{
+                categories: data.dates,
+                crosshair: true
+              }],
+              yAxis: [
+                { // Primary yAxis
+                  labels: {
+                    format: '{value} in',
+                  },
+                  title: {
+                    text: 'Evapotranspiration',
+                  },
                 },
-                tickInterval: 7 * 24 * 3600 * 1000, // one week
-                tickWidth: 0,
-                gridLineWidth: 1,
-                labels: {
-                  align: 'left',
-                  x: 3,
-                  y: -3
-                }
-              },
+                // { // Secondary yAxis
+                //   title: {
+                //     text: 'Values',
+                //   },
+                // },
+              ],
               series: [{
-                name: 'Temperature',
+                name: 'Temperature (F)',
                 data: data.temps,
                 tooltip: {
                   valueDecimals: 2
                 }
               }, {
-                name: 'Solar',
+                name: 'Solar (MJ)',
                 data: data.solars,
                 tooltip: {
                   valueDecimals: 2
                 }
               }, {
-                name: 'Evapo',
+                name: 'Evapo (In)',
                 data: data.evapos,
                 tooltip: {
                   valueDecimals: 2
