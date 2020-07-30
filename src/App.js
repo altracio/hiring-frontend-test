@@ -8,7 +8,7 @@ import './App.css';
 const DATE_FORMAT = 'YYYY-MM-DD';
 
 function App() {
-  const [delay, setDelay] = React.useState(1000);
+  const [delay, setDelay] = React.useState(2500);
   const [limit, setLimit] = React.useState(7);
 
   const [data, setData] = React.useState({
@@ -90,6 +90,16 @@ function App() {
               }],
               yAxis: [
                 { // Primary yAxis
+                  title: {
+                    text: 'Values',
+                  },
+
+                  labels: {
+                    format: '{value}'
+                  },
+                  opposite: true
+                },
+                { // Secondary yAxis
                   labels: {
                     format: '{value} in',
                   },
@@ -97,27 +107,25 @@ function App() {
                     text: 'Evapotranspiration',
                   },
                 },
-                // { // Secondary yAxis
-                //   title: {
-                //     text: 'Values',
-                //   },
-                // },
               ],
               series: [{
                 name: 'Temperature (F)',
                 data: data.temps,
+                yAxis: 1,
+                tooltip: {
+                  valueDecimals: 2
+                }
+              },{
+                name: 'Evapo (In)',
+                data: data.evapos,
+                yAxis: 0,
                 tooltip: {
                   valueDecimals: 2
                 }
               }, {
                 name: 'Solar (MJ)',
+                yAxis: 0,
                 data: data.solars,
-                tooltip: {
-                  valueDecimals: 2
-                }
-              }, {
-                name: 'Evapo (In)',
-                data: data.evapos,
                 tooltip: {
                   valueDecimals: 2
                 }
@@ -129,8 +137,8 @@ function App() {
           <tr>
             <th>Date</th>
             <th>Temps</th>
-            <th>Solar</th>
             <th>Evapo</th>
+            <th>Solar</th>
           </tr>
 
           <tbody>
@@ -139,8 +147,8 @@ function App() {
                 <tr key={i}>
                   <td>{date}</td>
                   <td>{data.temps[i][1]}</td>
-                  <td>{data.solars[i][1]}</td>
                   <td>{data.evapos[i][1]}</td>
+                  <td>{data.solars[i][1]}</td>
                 </tr>
               ))
             }
@@ -149,8 +157,12 @@ function App() {
 
         <div className="tool">
             <label htmlFor="limit" className="label">Limit (days)</label>
-            {/* <input type="number" name="Delay" value={delay} onChange={(e) => setDelay(parseInt(e.target.value, 10))}></input> */}
             <input type="number" name="limit" value={limit} onChange={(e) => setLimit(parseInt(e.target.value, 10))}></input>
+
+            <br />
+
+            <label htmlFor="delay" className="label">Refresh duration (ms)</label>
+            <input type="number" name="delay" value={delay} onChange={(e) => setDelay(parseInt(e.target.value, 10))} disabled></input>
         </div>
       </header>
     </div>
