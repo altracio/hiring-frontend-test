@@ -1,53 +1,150 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 import useInterval from './useInterval';
+import moment from 'moment';
 import { API_URL, DEVICE_ID, TZ_OFFSET, ELEVATION, LATITUDE, EVA_COEF } from './const';
 import './App.css';
 
-const data = [[1220832000000, 22.56], [1220918400000, 21.67], [1221004800000, 21.66], [1221091200000, 21.81], [1221177600000, 21.28], [1221436800000, 20.05], [1221523200000, 19.98], [1221609600000, 18.26], [1221696000000, 19.16], [1221782400000, 20.13], [1222041600000, 18.72], [1222128000000, 18.12], [1222214400000, 18.39], [1222300800000, 18.85], [1222387200000, 18.32], [1222646400000, 15.04], [1222732800000, 16.24], [1222819200000, 15.59], [1222905600000, 14.3], [1222992000000, 13.87], [1223251200000, 14.02], [1223337600000, 12.74], [1223424000000, 12.83], [1223510400000, 12.68], [1223596800000, 13.8], [1223856000000, 15.75], [1223942400000, 14.87], [1224028800000, 13.99], [1224115200000, 14.56], [1224201600000, 13.91], [1224460800000, 14.06], [1224547200000, 13.07], [1224633600000, 13.84], [1224720000000, 14.03], [1224806400000, 13.77], [1225065600000, 13.16], [1225152000000, 14.27], [1225238400000, 14.94], [1225324800000, 15.86], [1225411200000, 15.37], [1225670400000, 15.28], [1225756800000, 15.86], [1225843200000, 14.76], [1225929600000, 14.16], [1226016000000, 14.03], [1226275200000, 13.7], [1226361600000, 13.54], [1226448000000, 12.87], [1226534400000, 13.78], [1226620800000, 12.89], [1226880000000, 12.59], [1226966400000, 12.84], [1227052800000, 12.33], [1227139200000, 11.5], [1227225600000, 11.8], [1227484800000, 13.28], [1227571200000, 12.97], [1227657600000, 13.57], [1227830400000, 13.24], [1228089600000, 12.7], [1228176000000, 13.21], [1228262400000, 13.7], [1228348800000, 13.06], [1228435200000, 13.43], [1228694400000, 14.25], [1228780800000, 14.29], [1228867200000, 14.03], [1228953600000, 13.57], [1229040000000, 14.04], [1229299200000, 13.54]];
-
-const config = {
-  rangeSelector: {
-    selected: 1
-  },
-  title: {
-    text: 'AAPL Stock Price'
-  },
-  series: [{
-    name: 'AAPL',
-    data: data,
-    tooltip: {
-      valueDecimals: 2
-    }
-  }]
-};
+const DATE_FORMAT = 'YYYY-MM-DD';
 
 function App() {
+  const [duration, setDuration] = React.useState(0);
+  const [limit, setLimit] = React.useState(5);
+
+  const [temps, setTemps] = React.useState([]);
+  const [solars, setSolars] = React.useState([]);
+  const [evapos, setEvapos] = React.useState([]);
+  const [dates, setDates] = React.useState([]);
+
+  const [data, setData] = React.useState({
+    duration: 0,
+    temps: [],
+    evapos: [],
+    solars: [],
+    dates: [],
+  });
+
+  const [elevation, setElevation] = React.useState(ELEVATION);
+  const [coef, setCoef] = React.useState(EVA_COEF);
+
+  const addNewData = React.useCallback((data, item) => {
+    const newData = [...data];
+    newData.push(item);
+    if(newData.length > limit) {
+      newData.shift();
+    }
+
+    return newData;
+  }, [limit]);
+
   useInterval(() => {
     (async () => {
-      const URL = `${API_URL}/${DEVICE_ID}?date=2020-07-27&tzOffset=${TZ_OFFSET}&elevation=${ELEVATION}&latitude=${LATITUDE}&Kc=${EVA_COEF}`;
-
       try {
-        const response = await fetch(URL);
+        const date = moment(moment("2019-01-01"), DATE_FORMAT).add(data.duration, 'days').format(DATE_FORMAT);
+        const day = moment(date).format("MMMM Do");
+
+        let url = `${API_URL}/${DEVICE_ID}?date=${date}&tzOffset=${TZ_OFFSET}&elevation=${elevation}&latitude=${LATITUDE}&Kc=${coef}`;
+
+        const response = await fetch(url);
         const json = await response.json();
+
         const { meanDailyAirTemperatureC, meanSolarRadiationMJ, avgWindSpeedMs, atmosphericPressue, netRadiation, evapotranspirationMM, evapotranspirationIN} = json;
 
-        console.log('json', json);
+        setData({
+          duration: data.duration + 1,
+          temps: addNewData(data.temps, [
+            day,
+            meanDailyAirTemperatureC
+          ]),
+
+          solars: addNewData(data.solars, [
+            day,
+            atmosphericPressue
+          ]),
+
+          evapos: addNewData(data.evapos, [
+            day,
+            evapotranspirationIN
+          ]),
+
+          dates: addNewData(data.dates, day)
+        });
+
       } catch(ex) {
         console.log('Error during fetching data from api', ex); 
       }
     })();
-  }, [1000]);
+  }, 2000);
 
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Evapo Chart
-        </p>
         <div>
-          <ReactHighcharts config={config} isPureConfig/>
+          <ReactHighcharts
+            isPureConfig
+            config={{
+              rangeSelector: {
+                selected: 1
+              },
+              title: {
+                text: 'Evapo Chart'
+              },
+              xAxis: {
+                title: {
+                  text: 'Date'
+                },
+                tickInterval: 7 * 24 * 3600 * 1000, // one week
+                tickWidth: 0,
+                gridLineWidth: 1,
+                labels: {
+                  align: 'left',
+                  x: 3,
+                  y: -3
+                }
+              },
+              series: [{
+                name: 'Temperature',
+                data: data.temps,
+                tooltip: {
+                  valueDecimals: 2
+                }
+              }, {
+                name: 'Solar',
+                data: data.solars,
+                tooltip: {
+                  valueDecimals: 2
+                }
+              }, {
+                name: 'Evapo',
+                data: data.evapos,
+                tooltip: {
+                  valueDecimals: 2
+                }
+              }]
+            }}/>
         </div>
+
+        <table>
+          <tr>
+            <th>Date</th>
+            <th>Temps</th>
+            <th>Solar</th>
+            <th>Evapo</th>
+          </tr>
+
+          <tbody>
+            {
+              data.dates.map((date, i) => (
+                <tr key={i}>
+                  <td>{date}</td>
+                  <td>{data.temps[i][1]}</td>
+                  <td>{data.solars[i][1]}</td>
+                  <td>{data.evapos[i][1]}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
       </header>
     </div>
   );

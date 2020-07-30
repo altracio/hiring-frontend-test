@@ -1,4 +1,4 @@
-export const API_URL = 'https://stage.altrac-api.com/evapo/address/';
+export const API_URL = 'https://stage.altrac-api.com/evapo/address';
 
 export const DEVICE_ID = '26002e000c51343334363138';
 
