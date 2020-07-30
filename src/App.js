@@ -82,11 +82,14 @@ function App() {
                 selected: 1
               },
               title: {
-                text: 'Evapo Chart'
+                text: 'Evapo Live Chart.'
+              },
+              subtitle: {
+                text: 'data from Jan 01, 2019'
               },
               xAxis: [{
                 categories: data.dates,
-                crosshair: true
+                crosshair: true,
               }],
               yAxis: [
                 { // Primary yAxis
