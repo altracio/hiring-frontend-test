@@ -8,13 +8,8 @@ import './App.css';
 const DATE_FORMAT = 'YYYY-MM-DD';
 
 function App() {
-  const [duration, setDuration] = React.useState(0);
-  const [limit, setLimit] = React.useState(5);
-
-  const [temps, setTemps] = React.useState([]);
-  const [solars, setSolars] = React.useState([]);
-  const [evapos, setEvapos] = React.useState([]);
-  const [dates, setDates] = React.useState([]);
+  const [delay, setDelay] = React.useState(1000);
+  const [limit, setLimit] = React.useState(7);
 
   const [data, setData] = React.useState({
     duration: 0,
@@ -74,7 +69,7 @@ function App() {
         console.log('Error during fetching data from api', ex); 
       }
     })();
-  }, 2000);
+  }, delay);
 
   return (
     <div className="App">
@@ -145,6 +140,12 @@ function App() {
             }
           </tbody>
         </table>
+
+        <div className="tool">
+            <label htmlFor="limit" className="label">Limit (days)</label>
+            {/* <input type="number" name="Delay" value={delay} onChange={(e) => setDelay(parseInt(e.target.value, 10))}></input> */}
+            <input type="number" name="limit" value={limit} onChange={(e) => setLimit(parseInt(e.target.value, 10))}></input>
+        </div>
       </header>
     </div>
   );

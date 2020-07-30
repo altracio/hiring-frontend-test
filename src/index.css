@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.tool {
+  position: fixed;
+  right: 1em;
+  top: 1em;
+}
+
+.label {
+  font-size: 1rem;
+  margin-right: 1em;
+}
