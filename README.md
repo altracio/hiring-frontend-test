@@ -1,55 +1,68 @@
-# Altrac Frontend Developer Test 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Overview
+## Available Scripts
 
-A small exercise to determine if you have some basic JavaScript, React and data manipulation skills as well as an understanding of how to deploy JS websites.
+In the project directory, you can run:
 
-The goal is to build a one-page site that loads and displays [Evapotranspiration](https://en.wikipedia.org/wiki/Evapotranspiration) data from a weather station through our API and chart it in [HighCharts](https://www.highcharts.com/).
+### `yarn start`
 
-You can present this in any way you like, with the following conditions:
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-- The site must load live data from our API. It should show at least 3 days of data
-- The website must be deployed to AWS S3 (if it is not deployed there, it will encounter CORS issues)
-- You must use HighCharts for charting
-- You must use the React library for building the user interface
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-## Example
+### `yarn test`
 
-Below is a very simple chart I mocked up using HighCharts and deployed to S3. It shows Evapotranspiration in inches as well as temperature and solar data.
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-![Basic Chart](images/basic.png)
+### `yarn build`
 
-## Details
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The API request can be made with the following URL: https://stage.altrac-api.com/evapo/address/26002e000c51343334363138?date=2020-07-27&tzOffset=-7&elevation=160.9&latitude=43.2624613&Kc=0.51
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
 
-- stage = Our production API does not allow for CORS requests
-- 26002e000c51343334363138 = ID of device
-- 2020-07-27 = Date of requested data
-- -7 = time zone offset
-- 160.9 = elevation of weather station in meters
-- 43.2624613 = latitude of weather station
-- 0.51 = Evapotranspiration coefficient
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Assessment
+### `yarn eject`
 
-Once completed, please email us a link to both the deployed site and fork of this repo showing your code. We will review it with the following in mind:
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-- Does the website load?
-- Is the website using React? Does the React code make sense?
-- Are there instruction on how to run or deploy the code?
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-If for some reason you cannot deploy to S3, this won't necessarily disqualify you, but you should provide a reason.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-Some extra credit (but please don't spend much time on this):
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-- Website is bundled via webpack, and there is a webpack configuration file that runs and generates bundled code
-- The website has some live controls that work without page reload. Some ideas:
-   - Ability to change date range and reload data
-   - Change from metric to standard units
-   - Change the Evapotranspiration coefficient
-- Display chart data in a simple table
+## Learn More
 
-## Questions or Issues
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-If you've run into any issues or have questions, please email support@altrac.io
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+
+### Analyzing the Bundle Size
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `yarn build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
